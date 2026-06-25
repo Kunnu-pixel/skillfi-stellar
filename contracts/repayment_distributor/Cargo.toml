@@ -1,0 +1,15 @@
+[package]
+name = "repayment_distributor"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+soroban-sdk = "20.0.0"
+
+[dev-dependencies]
+soroban-sdk = { version = "20.0.0", features = ["testutils"] }
+funding_pool = { path = "../funding_pool" }
+isa_registry = { path = "../isa_registry" }
