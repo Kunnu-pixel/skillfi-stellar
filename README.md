@@ -391,3 +391,5 @@ MIT — build freely, attribute kindly.
 ---
 
 *Built for the Stellar Hackathon 2025. Deployed on Stellar Testnet. Not financial advice.*
+
+<!-- Production Ready MVP -->
