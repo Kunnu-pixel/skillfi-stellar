@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = [
+    "isa_registry",
+    "funding_pool",
+    "repayment_distributor",
+]
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = false
+panic = "abort"
+lto = true
+codegen-units = 1
