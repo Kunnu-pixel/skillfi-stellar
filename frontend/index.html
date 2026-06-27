@@ -1,20 +1,343 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239d4edd' stroke-width='2'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- SEO Tags -->
-    <title>SkillFi - Decentralized Income Share Agreement Platform</title>
-    <meta name="description" content="Decentralized Income Share Agreement financing on Stellar. Empowering students and freelancers with upfront funding in exchange for a small percentage of future income." />
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillFi — Fund your future. Not your debt.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1220;
+    --ink-2:#101A30;
+    --line:#26314E;
+    --line-soft:#1B2440;
+    --paper:#F2EEE3;
+    --paper-dim:#E7E1D2;
+    --text:#ECE8DC;
+    --text-dim:#9CA3C0;
+    --amber:#D9A441;
+    --amber-deep:#7A5419;
+    --teal:#3FB8AF;
+    --teal-deep:#1B5C57;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:'IBM Plex Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- NAV ---------- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(11,18,32,0.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line-soft);}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;}
+  .brand{font-family:'Fraunces',serif;font-weight:600;font-size:21px;letter-spacing:0.01em;display:flex;align-items:center;gap:8px;}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;}
+  .navlinks{display:flex;gap:36px;font-size:14px;color:var(--text-dim);}
+  .navlinks a:hover{color:var(--text);}
+  .nav-cta{border:1px solid var(--amber);color:var(--amber);padding:9px 18px;border-radius:2px;font-size:13px;letter-spacing:0.02em;}
+  .nav-cta:hover{background:var(--amber);color:var(--ink);}
+  @media(max-width:760px){.navlinks{display:none;}}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:96px 0 80px;position:relative;overflow:hidden;}
+  header.hero::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, var(--line-soft) 39px, var(--line-soft) 40px);
+    opacity:0.35;mask-image:linear-gradient(to bottom, transparent, black 10%, black 70%, transparent);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:center;position:relative;z-index:1;}
+  @media(max-width:880px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:18px;}
+  .eyebrow::before{content:"§ ";color:var(--amber);}
+  h1.headline{
+    font-family:'Fraunces',serif;font-weight:500;font-size:clamp(40px,5.4vw,64px);
+    line-height:1.05;letter-spacing:-0.01em;margin:0 0 24px;
+  }
+  h1.headline em{font-style:italic;font-weight:300;color:var(--amber);}
+  .sub{font-size:17px;line-height:1.65;color:var(--text-dim);max-width:480px;margin-bottom:36px;}
+  .cta-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn-primary{background:var(--amber);color:#1A1304;padding:15px 28px;font-size:14px;font-weight:500;border-radius:2px;letter-spacing:0.01em;}
+  .btn-primary:hover{background:#E8B65A;}
+  .btn-ghost{border:1px solid var(--line);padding:15px 28px;font-size:14px;color:var(--text);border-radius:2px;}
+  .btn-ghost:hover{border-color:var(--text-dim);}
+
+  /* ---- ledger slip (signature element) ---- */
+  .slip{
+    background:var(--paper);color:#2A2410;border-radius:3px;
+    padding:30px 28px 26px;position:relative;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.55);
+    font-family:'IBM Plex Mono',monospace;
+    transform:rotate(1.2deg);
+  }
+  .slip::before,.slip::after{
+    content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+    background:var(--ink);top:-11px;
+  }
+  .slip::before{left:-11px;} .slip::after{right:-11px;}
+  .slip .perf{position:absolute;top:0;left:0;right:0;height:0;
+    border-top:2px dashed rgba(42,36,16,0.25);}
+  .slip-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;border-bottom:1px solid rgba(42,36,16,0.25);padding-bottom:14px;}
+  .slip-head .tag{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber-deep);}
+  .slip-head .no{font-size:11px;opacity:0.55;}
+  .slip-row{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(42,36,16,0.12);}
+  .slip-row span:first-child{color:rgba(42,36,16,0.65);}
+  .slip-row span:last-child{font-weight:500;}
+  .slip-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;padding-top:14px;border-top:1px solid rgba(42,36,16,0.3);}
+  .slip-total .amt{font-family:'Fraunces',serif;font-size:30px;font-weight:500;color:var(--teal-deep);}
+  .slip-total .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(42,36,16,0.55);}
+  .slip-stamp{position:absolute;bottom:24px;right:26px;border:1.5px solid var(--teal-deep);color:var(--teal-deep);
+    border-radius:50%;width:62px;height:62px;display:flex;align-items:center;justify-content:center;
+    font-size:9px;text-align:center;letter-spacing:0.05em;text-transform:uppercase;transform:rotate(-12deg);opacity:0.75;line-height:1.2;}
+
+  /* ---------- LOGOS / proof strip ---------- */
+  .proof{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:22px 0;}
+  .proof .wrap{display:flex;gap:48px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+  .proof-item{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:0.04em;}
+  .proof-item b{color:var(--text);font-weight:500;}
+
+  /* ---------- SECTION shared ---------- */
+  section{padding:104px 0;}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:14px;}
+  h2.sec-title{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,3.4vw,38px);line-height:1.15;margin:0 0 18px;max-width:640px;}
+  .sec-sub{color:var(--text-dim);max-width:520px;font-size:16px;line-height:1.65;}
+
+  /* ---------- HOW IT WORKS — two ledgers side by side ---------- */
+  .ledgers{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:56px;border:1px solid var(--line);}
+  @media(max-width:760px){.ledgers{grid-template-columns:1fr;}}
+  .ledger-col{background:var(--ink-2);padding:36px 34px;}
+  .ledger-col h3{font-family:'Fraunces',serif;font-size:21px;font-weight:500;margin:0 0 6px;}
+  .ledger-col .role-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:22px;display:block;}
+  .ledger-col.investor .role-tag{color:var(--amber);}
+  .step{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line-soft);}
+  .step:first-of-type{border-top:none;}
+  .step .idx{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);min-width:22px;padding-top:2px;}
+  .step p{margin:0;font-size:14.5px;line-height:1.6;color:var(--text-dim);}
+  .step strong{color:var(--text);font-weight:500;}
+
+  /* ---------- TERMS table (real ISA contract feel) ---------- */
+  .terms{margin-top:56px;border:1px solid var(--line);background:var(--ink-2);}
+  .terms-row{display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 0.8fr;border-bottom:1px solid var(--line-soft);}
+  .terms-row:last-child{border-bottom:none;}
+  .terms-row.head{background:var(--line-soft);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);}
+  .terms-row div{padding:16px 20px;font-size:14px;border-right:1px solid var(--line-soft);}
+  .terms-row div:last-child{border-right:none;}
+  .terms-row:not(.head) div:first-child{font-weight:500;color:var(--text);}
+  .terms-row:not(.head) div{color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  @media(max-width:700px){.terms-row{grid-template-columns:1.4fr 1fr;}.terms-row div:nth-child(3),.terms-row div:nth-child(4){display:none;}}
+
+  /* ---------- STACK / trust ---------- */
+  .stackgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:56px;background:var(--line);border:1px solid var(--line);}
+  @media(max-width:760px){.stackgrid{grid-template-columns:1fr;}}
+  .stack-card{background:var(--ink-2);padding:30px 28px;}
+  .stack-card .mark{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--teal);margin-bottom:10px;letter-spacing:0.06em;text-transform:uppercase;}
+  .stack-card h4{font-family:'Fraunces',serif;font-weight:500;font-size:18px;margin:0 0 10px;}
+  .stack-card p{font-size:14px;color:var(--text-dim);line-height:1.6;margin:0;}
+
+  /* ---------- CTA band ---------- */
+  .cta-band{background:var(--paper);color:#2A2410;border-radius:3px;padding:64px 56px;display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;}
+  .cta-band h3{font-family:'Fraunces',serif;font-size:30px;font-weight:500;margin:0 0 8px;max-width:420px;line-height:1.2;}
+  .cta-band p{margin:0;color:rgba(42,36,16,0.65);font-size:14.5px;max-width:360px;}
+  .cta-band .btn-primary{background:var(--teal-deep);color:#F2EEE3;}
+  .cta-band .btn-primary:hover{background:#226e68;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line-soft);padding:48px 0;}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap;}
+  .foot-col h5{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin:0 0 14px;}
+  .foot-col a{display:block;font-size:13.5px;color:var(--text-dim);margin-bottom:10px;}
+  .foot-col a:hover{color:var(--amber);}
+  .foot-note{font-size:12px;color:var(--text-dim);margin-top:32px;font-family:'IBM Plex Mono',monospace;}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity 0.7s ease, transform 0.7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>SkillFi</div>
+    <div class="navlinks">
+      <a href="#how">How it works</a>
+      <a href="#terms">Contract terms</a>
+      <a href="#stack">Built on Stellar</a>
+      <a href="#join">Get started</a>
+    </div>
+    <a class="nav-cta" href="#join">Connect wallet</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Income-share agreements, on-chain</div>
+      <h1 class="headline">Fund your future.<br><em>Not</em> your debt.</h1>
+      <p class="sub">SkillFi lets earners raise capital today against a capped share of tomorrow's income — enforced by Soroban smart contracts, not a collections agency. No interest. No collateral. No surprises.</p>
+      <div class="cta-row">
+        <a class="btn-primary" href="#join">Raise capital as an earner</a>
+        <a class="btn-ghost" href="#join">Fund an ISA as an investor</a>
+      </div>
+    </div>
+    <div>
+      <div class="slip">
+        <div class="perf"></div>
+        <div class="slip-head">
+          <span class="tag">Income-share agreement</span>
+          <span class="no">No. 0427 — Testnet</span>
+        </div>
+        <div class="slip-row"><span>Earner</span><span>GADX…7K2Q</span></div>
+        <div class="slip-row"><span>Income share</span><span>6.0%</span></div>
+        <div class="slip-row"><span>Term</span><span>48 months</span></div>
+        <div class="slip-row"><span>Repayment cap</span><span>1.85×</span></div>
+        <div class="slip-total">
+          <div>
+            <div class="lbl">Capital raised</div>
+            <div class="amt">$12,000</div>
+          </div>
+          <div class="lbl" style="text-align:right;">Status<br><span style="color:var(--teal-deep);font-family:'IBM Plex Mono',monospace;font-size:13px;">● funded</span></div>
+        </div>
+        <div class="slip-stamp">Stellar<br>testnet<br>verified</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="proof">
+  <div class="wrap">
+    <div class="proof-item"><b>3</b> Soroban contracts deployed</div>
+    <div class="proof-item"><b>10</b> testnet users onboarded</div>
+    <div class="proof-item"><b>4.3 / 5</b> average satisfaction</div>
+    <div class="proof-item">Settled in <b>USDC</b> on Stellar</div>
+  </div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2 class="sec-title">One ledger, two sides of the same agreement.</h2>
+    <p class="sec-sub">Every ISA is a single on-chain record. Earners and investors read from the same source of truth — what's owed, what's been paid, and what's left.</p>
+
+    <div class="ledgers reveal">
+      <div class="ledger-col earner">
+        <span class="role-tag">For earners</span>
+        <h3>Raise without debt</h3>
+        <div class="step"><span class="idx">01</span><p><strong>Set your terms.</strong> Choose how much to raise, your income share, and the repayment cap.</p></div>
+        <div class="step"><span class="idx">02</span><p><strong>Publish the ISA.</strong> Terms are written to the registry contract — visible, immutable, not negotiable after the fact.</p></div>
+        <div class="step"><span class="idx">03</span><p><strong>Get funded.</strong> Investors deposit USDC into your pool until the target is reached.</p></div>
+        <div class="step"><span class="idx">04</span><p><strong>Repay from income.</strong> Submit proof of earnings; the contract distributes your share pro-rata, and stops the moment your cap is hit.</p></div>
+      </div>
+      <div class="ledger-col investor">
+        <span class="role-tag">For investors</span>
+        <h3>Back people, not balance sheets</h3>
+        <div class="step"><span class="idx">01</span><p><strong>Browse live ISAs.</strong> Every listing shows the earner's share, term, and cap before you commit a cent.</p></div>
+        <div class="step"><span class="idx">02</span><p><strong>Fund a pool.</strong> Your deposit is tracked as shares in the funding pool contract — no intermediary holds your position.</p></div>
+        <div class="step"><span class="idx">03</span><p><strong>Track repayments.</strong> Watch income land and distribute automatically as the earner reports.</p></div>
+        <div class="step"><span class="idx">04</span><p><strong>Exit at the cap.</strong> Once the repayment cap is reached, the contract closes the position — by design, not by negotiation.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="terms" style="padding-top:0;">
+  <div class="wrap">
+    <div class="kicker">What's enforced on-chain</div>
+    <h2 class="sec-title">The terms that actually matter, in plain figures.</h2>
+    <p class="sec-sub">No fine print buried in a PDF. The repayment distributor contract enforces these exact numbers — and refuses to take a cent past the cap.</p>
+
+    <div class="terms reveal">
+      <div class="terms-row head">
+        <div>Clause</div><div>Value</div><div>Enforced by</div><div>Editable after funding</div>
+      </div>
+      <div class="terms-row"><div>Income share</div><div>3–10%</div><div>funding_pool</div><div>No</div></div>
+      <div class="terms-row"><div>Repayment cap</div><div>1.5–2.0×</div><div>repayment_distributor</div><div>No</div></div>
+      <div class="terms-row"><div>Term length</div><div>24–60 mo</div><div>isa_registry</div><div>No</div></div>
+      <div class="terms-row"><div>Settlement asset</div><div>USDC (SAC)</div><div>funding_pool</div><div>No</div></div>
+      <div class="terms-row"><div>Zero-income months</div><div>$0 owed</div><div>repayment_distributor</div><div>No</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="kicker">Why Stellar</div>
+    <h2 class="sec-title">Built for settlement speed and low fees, not speculation.</h2>
+    <p class="sec-sub">An ISA only works if repayments clear fast and cheaply, month after month. That's a Stellar problem to solve, not a general-purpose-chain one.</p>
+
+    <div class="stackgrid reveal">
+      <div class="stack-card">
+        <div class="mark">Soroban</div>
+        <h4>Three small contracts, not one monolith</h4>
+        <p>Registry, funding pool, and repayment distributor are separated so each can be audited and reasoned about on its own.</p>
+      </div>
+      <div class="stack-card">
+        <div class="mark">Freighter</div>
+        <h4>Sign with the wallet you already use</h4>
+        <p>Network detection and a testnet warning banner mean you always know which ledger you're signing against.</p>
+      </div>
+      <div class="stack-card">
+        <div class="mark">Indexer</div>
+        <h4>Every event, mirrored to a queryable record</h4>
+        <p>A lightweight indexer polls Stellar RPC and mirrors <code>pool_fund</code> and <code>repaid</code> events into the explorer in near real time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <div>
+        <h3>Your first ISA takes about four minutes to set up.</h3>
+        <p>Connect Freighter, set your terms, and publish to Stellar Testnet — no paperwork, no credit check.</p>
+      </div>
+      <a class="btn-primary" href="#">Connect wallet to begin</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h5>Product</h5>
+        <a href="#how">How it works</a>
+        <a href="#terms">Contract terms</a>
+        <a href="#stack">Architecture</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contracts</h5>
+        <a href="#">ISA registry</a>
+        <a href="#">Funding pool</a>
+        <a href="#">Repayment distributor</a>
+      </div>
+      <div class="foot-col">
+        <h5>Resources</h5>
+        <a href="#">Stellar Expert (testnet)</a>
+        <a href="#">Demo video</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+    <div class="brand" style="align-self:flex-start;"><span class="dot"></span>SkillFi</div>
+  </div>
+  <div class="wrap foot-note">Built for the Stellar Hackathon 2025 · Deployed on Stellar Testnet · Not financial advice.</div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); } });
+  },{threshold:0.15});
+  els.forEach(el=>io.observe(el));
+</script>
+
+</body>
 </html>

@@ -321,16 +321,16 @@ export default function App() {
           </div>
 
           {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
+          <nav className="hidden md:flex items-center gap-4 text-sm font-semibold">
             <button 
               onClick={() => setCurrentView('explore')} 
-              className={`transition-colors ${currentView === 'explore' ? 'text-indigo-600 font-bold' : 'text-text-secondary hover:text-text-primary'}`}
+              className={`nav-button transition-colors ${currentView === 'explore' ? 'active' : 'text-text-secondary hover:text-text-primary'}`}
             >
               Explore Pools
             </button>
             <button 
               onClick={() => setCurrentView('earner')} 
-              className={`transition-colors ${currentView === 'earner' ? 'text-indigo-600 font-bold' : 'text-text-secondary hover:text-text-primary'}`}
+              className={`nav-button transition-colors ${currentView === 'earner' ? 'active' : 'text-text-secondary hover:text-text-primary'}`}
             >
               Earner Hub
             </button>
@@ -344,12 +344,70 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-grow">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4 text-text-muted">
+          <div className="loading-state">
             <Loader2 className="w-10 h-10 animate-spin text-purple-400" />
             <p className="text-sm">Fetching parameters from Soroban RPC...</p>
           </div>
         ) : (
           <div>
+            <section className="hero-section">
+              <div className="hero-copy">
+                <p className="eyebrow">Built for next-gen talent funding on Stellar</p>
+                <h2>Transform skills into backed income-share agreements with instant investor access.</h2>
+                <p className="hero-description">
+                  SkillFi makes it easy for earners and investors to launch transparent ISA proposals,
+                  track repayments, and verify income on Stellar Testnet.
+                </p>
+                <div className="hero-actions">
+                  <button type="button" onClick={() => setCurrentView('explore')} className="btn-primary">
+                    Explore Pools
+                  </button>
+                  <button type="button" onClick={() => setCurrentView('earner')} className="btn-secondary">
+                    Earner Hub
+                  </button>
+                </div>
+              </div>
+
+              <div className="hero-visual">
+                <div className="hero-visual-tag">SkillFi Live Preview</div>
+                <div className="hero-visual-display">
+                  <div className="hero-visual-card hero-visual-card-left">
+                    <span>ISA Pipeline</span>
+                    <strong>42 proposals</strong>
+                    <p>Funding requests matching career growth and skills investor demand.</p>
+                  </div>
+                  <div className="hero-visual-card hero-visual-card-right">
+                    <span>Investor flow</span>
+                    <strong>11 active backers</strong>
+                    <p>That’s new USDC flowing into talent-backed earnings agreements.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hero-card-grid">
+                <div className="hero-card">
+                  <span className="hero-card-pill">Live Test</span>
+                  <strong>{stats.totalFunded?.toLocaleString() || '0'} USDC</strong>
+                  <p>Committed to skill-backed funding this session.</p>
+                </div>
+                <div className="hero-card">
+                  <span className="hero-card-pill">Performance</span>
+                  <strong>{stats.totalRepaid?.toLocaleString() || '0'} USDC</strong>
+                  <p>Repayments routed to investors via contract-backed distribution.</p>
+                </div>
+                <div className="hero-card">
+                  <span className="hero-card-pill">Active ISAs</span>
+                  <strong>{stats.activeIsas || '0'}</strong>
+                  <p>Open skill financing agreements available for investment.</p>
+                </div>
+                <div className="hero-card">
+                  <span className="hero-card-pill">Claims</span>
+                  <strong>{stats.repaymentCount || '0'}</strong>
+                  <p>Verified income reports and repayment events logged.</p>
+                </div>
+              </div>
+            </section>
+
             {currentView === 'explore' ? (
               <Dashboard
                 address={address}
