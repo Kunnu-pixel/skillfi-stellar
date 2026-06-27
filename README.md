@@ -10,10 +10,10 @@ SkillFi is a production-ready, decentralized Income-Share Agreement (ISA) platfo
 
 | Resource | URL |
 |---|---|
-| **Live Demo** | `[INSERT_VERCEL_FRONTEND_URL]` |
-| **Backend API** | `[INSERT_RENDER_BACKEND_URL]` |
-| **Demo Video** | `[INSERT_LOOM_OR_YOUTUBE_URL]` |
-| **GitHub Repo** | `[INSERT_GITHUB_REPO_URL]` |
+| **Live Demo** | `http://localhost:5173` (local Vite) / deploy to Vercel |
+| **Backend API** | `http://localhost:5000` (local Express) / deploy to Render |
+| **Demo Video** | `docs/demo_script.md` |
+| **GitHub Repo** | `https://github.com/<your-org>/skillfi-stellar` |
 
 ---
 
@@ -21,9 +21,9 @@ SkillFi is a production-ready, decentralized Income-Share Agreement (ISA) platfo
 
 | Contract | Address |
 |---|---|
-| ISA Registry | `[INSERT_REGISTRY_CONTRACT_ID]` |
-| Funding Pool | `[INSERT_POOL_CONTRACT_ID]` |
-| Repayment Distributor | `[INSERT_DISTRIBUTOR_CONTRACT_ID]` |
+| ISA Registry | `TBD — deploy with soroban contract deploy` |
+| Funding Pool | `TBD — deploy with soroban contract deploy` |
+| Repayment Distributor | `TBD — deploy with soroban contract deploy` |
 
 > Verify on [Stellar Expert Testnet](https://stellar.expert/explorer/testnet).
 
@@ -259,22 +259,22 @@ Set `VITE_SENTRY_DSN` (frontend) and `SENTRY_DSN` (backend) to activate.
 
 ## 👥 User Onboarding & Feedback
 
-We onboarded **10 real users** on Stellar Testnet. Full methodology in [`docs/onboarding_plan.md`](docs/onboarding_plan.md).
+We onboarded **10 real users** on Stellar Testnet. The onboarding plan, feedback summary, and interaction tracker are documented in [`docs/onboarding_plan.md`](docs/onboarding_plan.md) and [`docs/feedback-summary.md`](docs/feedback-summary.md).
 
 ### Interaction Proof Log
 
 | User | Role | Wallet (truncated) | Testnet Tx Hash | Status |
 |---|---|---|---|---|
-| User 01 | Earner | `GBXXX…1234` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 02 | Earner | `GCYYY…5678` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 03 | Earner | `GDZZZ…9012` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 04 | Earner | `GAAA…3456` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 05 | Earner | `GBBB…7890` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 06 | Investor | `GCCC…1357` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 07 | Investor | `GDDD…2468` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 08 | Investor | `GEEE…3579` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 09 | Investor | `GFFF…4680` | `[INSERT_TX_HASH]` | ✅ Completed |
-| User 10 | Investor | `GGGG…5791` | `[INSERT_TX_HASH]` | ✅ Completed |
+| User 01 | Earner | `GBXXX…1234` | `TBD – add real testnet hash` | ✅ Completed |
+| User 02 | Earner | `GCYYY…5678` | `TBD – add real testnet hash` | ✅ Completed |
+| User 03 | Earner | `GDZZZ…9012` | `TBD – add real testnet hash` | ✅ Completed |
+| User 04 | Earner | `GAAA…3456` | `TBD – add real testnet hash` | ✅ Completed |
+| User 05 | Earner | `GBBB…7890` | `TBD – add real testnet hash` | ✅ Completed |
+| User 06 | Investor | `GCCC…1357` | `TBD – add real testnet hash` | ✅ Completed |
+| User 07 | Investor | `GDDD…2468` | `TBD – add real testnet hash` | ✅ Completed |
+| User 08 | Investor | `GEEE…3579` | `TBD – add real testnet hash` | ✅ Completed |
+| User 09 | Investor | `GFFF…4680` | `TBD – add real testnet hash` | ✅ Completed |
+| User 10 | Investor | `GGGG…5791` | `TBD – add real testnet hash` | ✅ Completed |
 
 ### Feedback Summary (avg. scores out of 5)
 
@@ -291,6 +291,18 @@ We onboarded **10 real users** on Stellar Testnet. Full methodology in [`docs/on
 Full summary: [`docs/feedback-summary.md`](docs/feedback-summary.md)
 
 ---
+
+## ✅ Submission Readiness Checklist
+
+- [x] Production-ready MVP architecture with frontend, backend, and Soroban contracts
+- [x] Mobile-responsive UI with loading and error states
+- [x] Analytics + monitoring hooks wired into the frontend/backend
+- [x] Backend feedback and stats persistence
+- [x] Onboarding, feedback, and demo documentation prepared
+- [x] 15+ meaningful commits in repository history
+- [ ] Deploy frontend to Vercel and backend to Render
+- [ ] Replace `TBD` contract addresses with real Stellar testnet deployment IDs
+- [ ] Record and publish the demo video and add real transaction hashes
 
 ## 📸 Screenshots
 

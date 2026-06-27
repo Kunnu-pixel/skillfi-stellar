@@ -1,0 +1,19 @@
+[package]
+name = "integration_tests"
+version = "0.1.0"
+edition = "2021"
+
+# This crate is test-only; we don't produce a library binary
+[lib]
+name = "integration_tests"
+crate-type = ["rlib"]
+
+[dependencies]
+soroban-sdk = { version = "20.0.0", features = ["testutils"] }
+isa_registry = { path = "../isa_registry" }
+funding_pool = { path = "../funding_pool" }
+repayment_distributor = { path = "../repayment_distributor" }
+arbitrary = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { version = "20.0.0", features = ["testutils"] }

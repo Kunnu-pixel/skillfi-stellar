@@ -4,8 +4,9 @@ import WalletConnect from './components/WalletConnect';
 import Dashboard from './components/Dashboard';
 import InvestmentModal from './components/InvestmentModal';
 import RepaymentForm from './components/RepaymentForm';
+import { analytics } from './lib/analytics';
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function App() {
   const [address, setAddress] = useState('');
@@ -19,6 +20,7 @@ export default function App() {
   const [selectedIsa, setSelectedIsa] = useState(null);
   const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [notice, setNotice] = useState('');
 
   // Profile forms
   const [profileName, setProfileName] = useState('');
@@ -40,6 +42,7 @@ export default function App() {
   const fetchData = async () => {
     try {
       setLoading(true);
+      setNotice('');
       const resStats = await fetch(`${BACKEND_URL}/api/stats`);
       const dataStats = await resStats.json();
       setStats(dataStats);
@@ -48,8 +51,9 @@ export default function App() {
       const dataIsas = await resIsas.json();
       setIsas(dataIsas);
     } catch (err) {
-      console.warn("Backend server not running yet. Operating in local sandbox client-state.");
-      // Inject demo mock data if backend server is offline
+      console.warn('Backend server not running yet. Operating in local sandbox client-state.', err);
+      analytics.captureError(err, { stage: 'fetchData' });
+      setNotice('Backend unavailable; showing seeded demo data.');
       injectSandboxMocks();
     } finally {
       setLoading(false);
@@ -128,6 +132,8 @@ export default function App() {
   // Wallet handshake handler
   const handleWalletConnect = (userAddress) => {
     setAddress(userAddress);
+    analytics.identify(userAddress);
+    analytics.track('wallet_connected', { address: userAddress });
   };
 
   // Submit profile metadata
@@ -142,8 +148,10 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+      setNotice('Profile saved and synced.');
     } catch (err) {
-      console.warn("Offline state updated");
+      analytics.captureError(err, { stage: 'saveProfile' });
+      setNotice('Profile saved locally; backend availability is limited.');
     }
   };
 
@@ -184,8 +192,11 @@ export default function App() {
         body: JSON.stringify(payload)
       });
       fetchData();
+      analytics.track('isa_created', { isaId: newId, earner: payload.earner });
+      setNotice('ISA proposal created successfully.');
     } catch (err) {
-      console.warn("Created ISA in local state");
+      analytics.captureError(err, { stage: 'createIsa' });
+      setNotice('ISA created locally; the backend request did not complete.');
     }
   };
 
@@ -210,9 +221,12 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isaId, amount, investor: address || 'Demo_Investor' })
       });
+      analytics.track('investment_submitted', { isaId, amount, investor: address || 'Demo_Investor' });
+      setNotice('Investment submitted.');
       fetchData();
     } catch (err) {
-      console.warn("Invested in sandbox mode");
+      analytics.captureError(err, { stage: 'submitInvestment' });
+      setNotice('Investment was applied locally; backend sync is pending.');
     }
   };
 
@@ -237,9 +251,12 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isaId, income: amount * 10, docUrl: proofUrl })
       });
+      analytics.track('repayment_submitted', { isaId, amount, earner: address || 'Demo_Earner' });
+      setNotice('Repayment recorded.');
       fetchData();
     } catch (err) {
-      console.warn("Repaid logged locally");
+      analytics.captureError(err, { stage: 'submitRepayment' });
+      setNotice('Repayment logged locally; backend sync is pending.');
     }
   };
 
@@ -251,8 +268,11 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(feedbackData)
       });
+      analytics.track('feedback_submitted', { role: feedbackData.role || 'Tester' });
+      setNotice('Feedback recorded successfully.');
     } catch (err) {
-      console.warn("Feedback logged in console:", feedbackData);
+      analytics.captureError(err, { stage: 'submitFeedback' });
+      console.warn('Feedback logged in console:', feedbackData);
     }
   };
 
@@ -260,35 +280,41 @@ export default function App() {
     <div className="min-h-screen flex flex-col justify-between">
       
       {/* Top Banner Alert regarding Sandbox Mode */}
-      <div className="bg-purple-950/60 border-b border-purple-500/20 backdrop-blur-md px-4 py-2 flex items-center justify-between text-xs text-purple-300">
+      <div className="bg-indigo-50 border-b border-indigo-100 px-4 py-2 flex items-center justify-between text-xs text-indigo-700 font-medium">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" />
+          <Sparkles className="w-4 h-4 text-indigo-500 animate-pulse" />
           <span><strong>Hackathon Judge Assistant</strong>: Operating in Sandbox mode. Switch toggles to test custom states.</span>
         </div>
         <button 
           onClick={() => setSandboxMode(!sandboxMode)}
-          className="flex items-center gap-1.5 px-3 py-1 bg-purple-500/10 hover:bg-purple-500/25 border border-purple-500/20 rounded-md font-bold transition-all"
+          className="flex items-center gap-1.5 px-3 py-1 bg-indigo-100 hover:bg-indigo-200 border border-indigo-200 rounded-md font-bold text-indigo-800 transition-all"
         >
           {sandboxMode ? (
-            <>Sandbox ON <ToggleRight className="w-4.5 h-4.5 text-emerald-400" /></>
+            <>Sandbox ON <ToggleRight className="w-4.5 h-4.5 text-emerald-500" /></>
           ) : (
             <>Live Testnet <ToggleLeft className="w-4.5 h-4.5 text-text-muted" /></>
           )}
         </button>
       </div>
 
+      {notice && (
+        <div className="bg-emerald-50 border-b border-emerald-200 px-4 py-2 text-sm text-emerald-700 font-medium text-center">
+          {notice}
+        </div>
+      )}
+
       {/* Main Header */}
-      <header className="sticky top-0 z-40 bg-bg-main/80 backdrop-blur-md border-b border-white/5 px-4 lg:px-8 py-4">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+            <div className="p-2 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600">
               <Award className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-xl font-black tracking-tight leading-none">
-                Skill<span className="text-purple-400">Fi</span>
+              <h1 className="text-xl font-black tracking-tight leading-none text-slate-900">
+                Skill<span className="text-indigo-600">Fi</span>
               </h1>
               <p className="text-[10px] text-text-muted">Income Share Agreements on Stellar</p>
             </div>
@@ -298,13 +324,13 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
             <button 
               onClick={() => setCurrentView('explore')} 
-              className={`transition-colors ${currentView === 'explore' ? 'text-purple-400' : 'text-text-secondary hover:text-text-primary'}`}
+              className={`transition-colors ${currentView === 'explore' ? 'text-indigo-600 font-bold' : 'text-text-secondary hover:text-text-primary'}`}
             >
               Explore Pools
             </button>
             <button 
               onClick={() => setCurrentView('earner')} 
-              className={`transition-colors ${currentView === 'earner' ? 'text-purple-400' : 'text-text-secondary hover:text-text-primary'}`}
+              className={`transition-colors ${currentView === 'earner' ? 'text-indigo-600 font-bold' : 'text-text-secondary hover:text-text-primary'}`}
             >
               Earner Hub
             </button>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#0f172a"/>
+  <rect x="50" y="50" width="1500" height="800" rx="28" fill="#111827" stroke="#4f46e5" stroke-width="3"/>
+  <rect x="90" y="90" width="1420" height="80" rx="18" fill="#1f2937"/>
+  <rect x="120" y="120" width="180" height="24" rx="12" fill="#818cf8"/>
+  <rect x="1220" y="108" width="220" height="44" rx="22" fill="#4f46e5"/>
+  <rect x="120" y="230" width="620" height="260" rx="24" fill="#1f2937"/>
+  <rect x="780" y="230" width="300" height="260" rx="24" fill="#111827" stroke="#4f46e5" stroke-width="2"/>
+  <rect x="120" y="540" width="960" height="220" rx="24" fill="#1f2937"/>
+  <text x="150" y="290" fill="#f8fafc" font-family="Segoe UI, Arial" font-size="42" font-weight="700">Fund your future.</text>
+  <text x="150" y="335" fill="#cbd5e1" font-family="Segoe UI, Arial" font-size="22">SkillFi turns income-share financing into a transparent, wallet-native experience.</text>
+  <rect x="150" y="370" width="220" height="48" rx="24" fill="#4f46e5"/>
+  <rect x="390" y="370" width="220" height="48" rx="24" fill="#374151"/>
+  <circle cx="900" cy="360" r="90" fill="#818cf8" opacity="0.25"/>
+  <circle cx="900" cy="360" r="56" fill="#818cf8"/>
+  <rect x="160" y="590" width="220" height="18" rx="9" fill="#818cf8"/>
+  <rect x="160" y="630" width="320" height="16" rx="8" fill="#475569"/>
+  <rect x="160" y="660" width="260" height="16" rx="8" fill="#475569"/>
+  <rect x="1120" y="620" width="200" height="110" rx="18" fill="#4f46e5"/>
+</svg>

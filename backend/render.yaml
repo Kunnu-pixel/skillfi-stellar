@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: skillfi-api
+    env: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: SOROBAN_RPC_URL
+        value: https://soroban-testnet.stellar.org
+      - key: DB_PATH
+        value: ./skillfi.db
+      - key: UPLOADS_DIR
+        value: ./uploads
+      # Set these in the Render dashboard (do not commit real values):
+      - key: FRONTEND_URL
+        sync: false
+      - key: REGISTRY_CONTRACT_ID
+        sync: false
+      - key: POOL_CONTRACT_ID
+        sync: false
+      - key: DISTRIBUTOR_CONTRACT_ID
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+    disk:
+      name: skillfi-data
+      mountPath: /opt/render/project/src
+      sizeGB: 1
