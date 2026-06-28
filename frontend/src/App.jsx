@@ -8,6 +8,29 @@ import { analytics } from './lib/analytics';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+const FEATURES = [
+  {
+    icon: <ShieldAlert className="w-5 h-5 text-indigo-600" />,
+    title: 'Contract trust without surprises',
+    desc: 'Soroban enforces ISA caps, repayment rules, and distribution logic on-chain.',
+  },
+  {
+    icon: <Database className="w-5 h-5 text-purple-600" />,
+    title: 'Transparent funding flow',
+    desc: 'Every proposal, payment, and claim is visible through the explorer and wallet events.',
+  },
+  {
+    icon: <Sparkles className="w-5 h-5 text-emerald-600" />,
+    title: 'Wallet-first experience',
+    desc: 'Freighter sign-in and transaction prompts keep onboarding fast and familiar.',
+  },
+  {
+    icon: <Compass className="w-5 h-5 text-slate-600" />,
+    title: 'Built for Stellar Testnet',
+    desc: 'Low fees, quick settlement, and a real Soroban-powered ISA workflow.',
+  },
+];
+
 export default function App() {
   const [address, setAddress] = useState('');
   const [isas, setIsas] = useState([]);
@@ -350,61 +373,136 @@ export default function App() {
           </div>
         ) : (
           <div>
-            <section className="hero-section">
+            <section className="hero-section ledger-hero">
+              <div className="ledger-panel">
+                <div className="ledger-top">
+                  <span className="ledger-title">Income Share Agreement</span>
+                  <div className="ledger-seal">Testnet Verified</div>
+                </div>
+
+                <div className="ledger-slip">
+                  <div className="ledger-header">
+                    <div>
+                      <span className="ledger-label">Contract type</span>
+                      <strong>SkillFi ISA</strong>
+                    </div>
+                    <div>
+                      <span className="ledger-label">Contract ID</span>
+                      <strong>ISA-2026-01</strong>
+                    </div>
+                  </div>
+
+                  <div className="ledger-values">
+                    <div>
+                      <span className="ledger-value-label">Income share</span>
+                      <strong>6%</strong>
+                    </div>
+                    <div>
+                      <span className="ledger-value-label">Repayment cap</span>
+                      <strong>1.5×</strong>
+                    </div>
+                    <div>
+                      <span className="ledger-value-label">Term</span>
+                      <strong>24 months</strong>
+                    </div>
+                    <div>
+                      <span className="ledger-value-label">Settlement</span>
+                      <strong>USDC</strong>
+                    </div>
+                  </div>
+
+                  <div className="ledger-section">
+                    <h3>Contract terms</h3>
+                    <table className="terms-table">
+                      <tbody>
+                        <tr>
+                          <td>Income share</td>
+                          <td>6%</td>
+                        </tr>
+                        <tr>
+                          <td>Repayment cap</td>
+                          <td>1.5× funding</td>
+                        </tr>
+                        <tr>
+                          <td>Term</td>
+                          <td>24 months</td>
+                        </tr>
+                        <tr>
+                          <td>Settlement asset</td>
+                          <td>USDC</td>
+                        </tr>
+                        <tr>
+                          <td>Zero-income months</td>
+                          <td>$0 owed</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="ledger-footer">
+                    <div>Author: Stellar Testnet</div>
+                    <div>Signed by: Freighter wallet</div>
+                  </div>
+                </div>
+              </div>
+
               <div className="hero-copy">
-                <p className="eyebrow">Built for next-gen talent funding on Stellar</p>
-                <h2>Transform skills into backed income-share agreements with instant investor access.</h2>
+                <span className="eyebrow">Transparent contract terms, presented like a real agreement.</span>
+                <h1 className="hero-title">
+                  SkillFi turns every ISA into a visible contract slip with precise terms.
+                </h1>
                 <p className="hero-description">
-                  SkillFi makes it easy for earners and investors to launch transparent ISA proposals,
-                  track repayments, and verify income on Stellar Testnet.
+                  Show income share, cap, term, and settlement clearly. Connect Freighter, sign on Stellar Testnet, and manage both earner and investor flows.
                 </p>
                 <div className="hero-actions">
                   <button type="button" onClick={() => setCurrentView('explore')} className="btn-primary">
                     Explore Pools
                   </button>
                   <button type="button" onClick={() => setCurrentView('earner')} className="btn-secondary">
-                    Earner Hub
+                    Earner Dashboard
                   </button>
                 </div>
-              </div>
 
-              <div className="hero-visual">
-                <div className="hero-visual-tag">SkillFi Live Preview</div>
-                <div className="hero-visual-display">
-                  <div className="hero-visual-card hero-visual-card-left">
-                    <span>ISA Pipeline</span>
-                    <strong>42 proposals</strong>
-                    <p>Funding requests matching career growth and skills investor demand.</p>
+                <div className="highlight-band">
+                  <div>
+                    <span className="highlight-label">Funded so far</span>
+                    <strong>{stats.totalFunded?.toLocaleString() || '0'} USDC</strong>
                   </div>
-                  <div className="hero-visual-card hero-visual-card-right">
-                    <span>Investor flow</span>
-                    <strong>11 active backers</strong>
-                    <p>That’s new USDC flowing into talent-backed earnings agreements.</p>
+                  <div>
+                    <span className="highlight-label">Active contracts</span>
+                    <strong>{stats.activeIsas || '0'}</strong>
                   </div>
                 </div>
+
+                <div className="hero-flow-grid">
+                  <div className="flow-card">
+                    <span>Earner</span>
+                    <p>Launch a transparent proposal, lock in the cap, and accept funding in USDC.</p>
+                  </div>
+                  <div className="flow-card">
+                    <span>Investor</span>
+                    <p>Fund a contract directly, earn share distributions, and trust on-chain settlement.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="section-padded feature-section">
+              <div className="section-header">
+                <h2 className="section-heading">Why SkillFi is better for skills funding</h2>
+                <p className="section-sub">
+                  Designed for the next generation of earners and investors, SkillFi combines Stellar speed, transparent contract logic, and easy wallet onboarding.
+                </p>
               </div>
 
-              <div className="hero-card-grid">
-                <div className="hero-card">
-                  <span className="hero-card-pill">Live Test</span>
-                  <strong>{stats.totalFunded?.toLocaleString() || '0'} USDC</strong>
-                  <p>Committed to skill-backed funding this session.</p>
-                </div>
-                <div className="hero-card">
-                  <span className="hero-card-pill">Performance</span>
-                  <strong>{stats.totalRepaid?.toLocaleString() || '0'} USDC</strong>
-                  <p>Repayments routed to investors via contract-backed distribution.</p>
-                </div>
-                <div className="hero-card">
-                  <span className="hero-card-pill">Active ISAs</span>
-                  <strong>{stats.activeIsas || '0'}</strong>
-                  <p>Open skill financing agreements available for investment.</p>
-                </div>
-                <div className="hero-card">
-                  <span className="hero-card-pill">Claims</span>
-                  <strong>{stats.repaymentCount || '0'}</strong>
-                  <p>Verified income reports and repayment events logged.</p>
-                </div>
+              <div className="feature-grid">
+                {FEATURES.map((feature) => (
+                  <div key={feature.title} className="feature-card glass-card">
+                    <div className="feature-icon">{feature.icon}</div>
+                    <h3 className="feature-title">{feature.title}</h3>
+                    <p className="feature-desc">{feature.desc}</p>
+                  </div>
+                ))}
               </div>
             </section>
 
@@ -419,6 +517,7 @@ export default function App() {
                   setIsInvestModalOpen(true);
                 }}
                 onFeedbackSubmit={handleFeedbackSubmit}
+                onNavigate={setCurrentView}
               />
             ) : (
               /* Earner Hub Dashboard View */

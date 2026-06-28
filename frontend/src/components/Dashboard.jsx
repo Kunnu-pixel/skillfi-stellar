@@ -101,8 +101,11 @@ export default function Dashboard({
                   <SkeletonCard count={3} />
                 </div>
               ) : isas.length === 0 ? (
-                <div className="glass-card text-center py-8 text-text-muted text-sm">
-                  No active ISA proposals found. <button className="underline text-purple-400" onClick={() => onNavigate?.('earner')}>Create the first one</button>.
+                <div className="glass-card placeholder-card text-center py-10 text-text-muted text-sm">
+                  <p className="mb-5 text-base text-slate-700">No active ISA proposals found yet.</p>
+                  <button className="btn-secondary btn-sm inline-flex items-center justify-center mx-auto" onClick={() => onNavigate?.('earner')}>
+                    Create the first ISA proposal
+                  </button>
                 </div>
               ) : (
                 <div className="dashboard-grid">
@@ -123,8 +126,11 @@ export default function Dashboard({
             <div>
               <h3 className="text-lg font-bold mb-4">Your Investments & Claim Balances</h3>
               {portfolio.length === 0 ? (
-                <div className="glass-card text-center py-8 text-text-muted text-sm">
-                  You do not hold any claim tokens yet. Explore open pools to invest.
+                <div className="glass-card placeholder-card text-center py-8 text-text-muted text-sm">
+                  <p className="mb-4 text-base text-slate-700">You do not hold any claim tokens yet.</p>
+                  <button className="btn-secondary btn-sm inline-flex items-center justify-center mx-auto" onClick={() => onNavigate?.('explore')}>
+                    Browse open pools
+                  </button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
