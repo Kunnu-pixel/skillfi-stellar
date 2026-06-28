@@ -15,6 +15,27 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// NOTE: proof uploads are stored locally under uploadsDir for MVP/testing.
+// Frontend expects POST /api/upload returning { url }.
+const multer = require('multer');
+const { randomUUID } = require('crypto');
+const storage = multer.diskStorage({
+  destination: function (_req, _file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (_req, file, cb) {
+    const safeExt = (file.originalname.split('.').pop() || 'bin').toLowerCase();
+    cb(null, `${Date.now()}-${randomUUID()}.${safeExt}`);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+});
+
+app.use('/uploads', express.static(uploadsDir));
+
+
 if (process.env.SENTRY_DSN) {
   Sentry.init({ dsn: process.env.SENTRY_DSN, tracesSampleRate: 1.0 });
 }
@@ -92,8 +113,21 @@ async function startIndexer() {
 }
 
 function processEvent(event) {
-  // Parsing events and syncing with state
+  // NOTE: This project currently uses only a lightweight DB mirror.
+  // processEvent must be implemented to sync on-chain events to SQLite.
+  //
+  // Event format from stellar-sdk: { id, pagingToken?, source, type?, transactionHash?, ... }
+  // With the current stub, the API remains write-only from REST.
+  //
+  // Implementers should map:
+  // - isa_registry::create_isa → publish isa_reg → insert/update isas
+  // - funding_pool::invest → publish invested/pool_fund → update investments + status
+  // - repayment_distributor::distribute_repayment → publish repaid → update repayments
+  // - repayment_distributor::submit_income_proof → publish proof_sub → insert proofs
+  //
+  // For now, intentionally no-op to avoid breaking existing behavior.
 }
+
 
 startIndexer();
 
@@ -173,18 +207,43 @@ app.post('/api/invest', (req, res) => {
 });
 
 app.post('/api/repayments', (req, res) => {
-  const { isaId, amount, payer, txHash } = req.body;
+  const { isaId, amount, payer, proofUrl, txHash } = req.body;
 
   const payment = db.insertRepayment.run({
     isa_id: Number(isaId),
     amount: Number(amount),
     payer,
-    proof_url: null,
+    proof_url: proofUrl || null,
     tx_hash: txHash,
   });
 
-  res.json({ success: true, payment: { id: payment.lastInsertRowid, isaId, amount: Number(amount), payer, txHash } });
+  res.json({
+    success: true,
+    payment: {
+      id: payment.lastInsertRowid,
+      isaId,
+      amount: Number(amount),
+      payer,
+      proofUrl: proofUrl || null,
+      txHash,
+    },
+  });
 });
+
+
+app.post('/api/upload', upload.single('proof'), (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Missing file field: proof' });
+    // Frontend expects: { url }
+    // Return an absolute URL so it works regardless of frontend base path.
+    const url = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    res.json({ success: true, url });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
+
 
 app.post('/api/proofs', (req, res) => {
   const { isaId, income, docUrl } = req.body;
@@ -192,6 +251,7 @@ app.post('/api/proofs', (req, res) => {
   const proof = db.insertProof.run({ isa_id: Number(isaId), income: Number(income), doc_url: docUrl });
   res.json({ success: true, proof: { id: proof.lastInsertRowid, isaId, income: Number(income), docUrl } });
 });
+
 
 app.post('/api/feedback', (req, res) => {
   const { address, role, usability, comments } = req.body;
