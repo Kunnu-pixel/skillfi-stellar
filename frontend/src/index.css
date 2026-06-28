@@ -35,14 +35,15 @@
 
 body {
   font-family: var(--font-sans);
-  color: var(--white);
-  background-color: var(--ink);
+  color: #FFFFFF;
+  background-color: #050816;
   min-height: 100vh;
   overflow-x: hidden;
   background-image:
-    radial-gradient(circle at 20% 15%, rgba(79, 184, 191, 0.08), transparent 18%),
-    radial-gradient(circle at 80% 12%, rgba(217, 164, 65, 0.06), transparent 16%);
+    radial-gradient(circle at 20% 15%, rgba(124, 58, 237, 0.12), transparent 22%),
+    radial-gradient(circle at 80% 12%, rgba(20, 184, 166, 0.10), transparent 18%);
 }
+
 
 ::selection {
   background: rgba(63, 184, 175, 0.25);
@@ -61,17 +62,19 @@ code, kbd, pre, samp, .mono {
 }
 
 .glass-card {
-  background: rgba(242, 238, 227, 0.95);
-  border: 1px solid rgba(11, 18, 32, 0.06);
-  box-shadow: var(--shadow-soft);
-  border-radius: var(--radius-lg);
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  border-radius: 20px;
   padding: 26px;
-  transition: var(--transition-smooth);
+  transition: 300ms;
+  backdrop-filter: blur(24px);
 }
 
 .glass-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
+
 
 button {
   font-family: var(--font-sans);
@@ -460,43 +463,49 @@ button:disabled {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  color: var(--text-secondary);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  color: #94A3B8;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
+
 .btn-secondary:hover {
-  background: #f8fafc;
-  color: var(--text-primary);
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.35);
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
+
 
 /* Inputs and form fields */
 input, textarea, select {
   font-family: var(--font-sans);
-  background-color: #ffffff;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: var(--border-radius-sm);
+  background-color: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
   padding: 14px 16px;
-  color: var(--text-primary);
+  color: #FFFFFF;
   font-size: 0.95rem;
-  transition: var(--transition-smooth);
+  transition: 300ms;
   width: 100%;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.12);
 }
+
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-  background-color: #fff;
+  border-color: rgba(124, 58, 237, 0.6);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+  background-color: rgba(15, 23, 42, 0.75);
 }
+
 
 input::placeholder,
 textarea::placeholder {
-  color: rgba(71, 85, 105, 0.75);
+  color: rgba(148, 163, 184, 0.75);
 }
+
 
 button, input, textarea, select {
   transition: var(--transition-smooth);
@@ -675,8 +684,9 @@ button, input, textarea, select {
 
 /* Header navigation styling */
 header {
-  background: rgba(255,255,255,0.88);
+  background: transparent;
 }
+
 
 header .nav-button {
   padding: 10px 14px;
@@ -973,8 +983,10 @@ footer {
 }
 
 footer {
-  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(243,244,246,0.9));
+  background: transparent;
 }
+
+
 
 @media (max-width: 1080px) {
   .hero-section {
